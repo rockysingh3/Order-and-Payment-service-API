@@ -1,0 +1,15 @@
+server:
+  port: 8761
+
+
+#sitting up the eureka server/ service registry
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+
+

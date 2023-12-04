@@ -1,0 +1,45 @@
+server:
+  port: 8082
+
+spring:
+  h2:
+    console.enabled: true
+  datasource:
+    url: jdbc:h2:mem:order
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+  #      this is the name of our application when it connects to eureka
+  application:
+    name: ORDER-SERVICE
+  #    configuring this service to the configServer
+  config:
+#    adding a optional to configserver so the app doesn't freak out if config server is not working
+    import: optional:configserver:http://localhost:9296
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-07547163.okta.com/oauth2/default
+      #          jwt-set-uri: https://dev-07547163.okta.com/oauth2/default/protocol/openid-connect/certs
+      client:
+        registration:
+          internal-client:
+            provider: okta
+            authorization-grant-type: client_credentials
+            scope: internal
+            client-id: 0oaddhhppisJ5vrvo5d7
+            client-secret: Rlk6sneSXQQMdcPZY2hh2YAZzsIWrScb8B_YB6kXNA6l2m4RAONoopZLFZ1hgWUB
+        provider:
+          okta:
+            issuer-uri: https://dev-07547163.okta.com/oauth2/default
+
+
+
+eureka:
+  client:
+    enabled: false

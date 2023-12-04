@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  serviceregistry:
+    image: 'rockysingh/serviceregistry:0.0.1'
+    container_name: serviceregistry
+    ports:
+      - '8761:8761'
+  configserver:
+    image: 'rockysingh/configserver:latest'
+    container_name: configserver
+    ports:
+      - '9296:9296'
+  cloudgatewat:
+    image: 'rockysingh/cloudgatewat:latest'
+    container_name: cloudgatewat
+    ports:
+      - '9090:9090'
+  orderservice:
+    image: 'rockysingh/orderservice:latest'
+    container_name: orderservice
+    ports:
+      - '8082:8082'
+  paymentservice:
+    image: 'rockysingh/paymentservice:latest'
+    container_name: paymentservice
+    ports:
+      - '8081:8081'
+  productservice:
+    image: 'rockysingh/productservice:latest'
+    container_name: productservice
+    ports:
+      - '8080:8080'

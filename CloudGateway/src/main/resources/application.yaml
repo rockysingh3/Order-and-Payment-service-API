@@ -1,0 +1,77 @@
+server:
+  port: 9090
+
+
+# Configuring an API gateway in Spring Cloud involves defining routes, filters, and other components to manage incoming
+# requests and route them to the appropriate backend services.
+
+spring:
+  application:
+    name: API-GATEWAY
+#    configuring this service to the configServer
+  config:
+    import: configserver:http://${CONFIG_SERVER_URL:localhost}:9296
+#    configuring api gateway routes
+  cloud:
+    gateway:
+      routes:
+        - id: ORDER-SERVICE
+          uri: lb://ORDER-SERVICE
+          predicates:
+          - Path=/order/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: ORDER-SERVICE
+                fallbackuri: forward:/orderServiceFallBack
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 1
+        - id: PAYMENT-SERVICE
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+          - Path=/payment/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: PAYMENT-SERVICE
+                fallbackuri: forward:/paymentServiceFallBack
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 1
+        - id: PRODUCT-SERVICE
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+          - Path=/product/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: PRODUCT-SERVICE
+                fallbackuri: forward:/productServiceFallBack
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 1
+
+
+# Okta configuration
+
+okta:
+  oauth2:
+    issuer: https://dev-07547163.okta.com/oauth2/default
+    audience: api://default
+    client-id: 0oaddhhppisJ5vrvo5d7
+    client-secret: Rlk6sneSXQQMdcPZY2hh2YAZzsIWrScb8B_YB6kXNA6l2m4RAONoopZLFZ1hgWUB
+    scopes: openid, profile, email, offline_access
+
+
+
+
+# THIS IS FOR TRACING ZIPKIN AND MICROMETER
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/productdb
+    username: root
+    password: Gur#sin#3333
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+#      this is the name of our application when it connects to eureka
+  application:
+    name: PRODUCT-SERVICE
+#    configuring this service to the configServer
+  config:
+    import: configserver:http://${CONFIG_SERVER_URL:localhost}:9296
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-07547163.okta.com/oauth2/default
+
+
+# THIS IS FOR TRACING ZIPKIN AND MICROMETER
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+#this is how you connect to the service registry/eureka client
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
